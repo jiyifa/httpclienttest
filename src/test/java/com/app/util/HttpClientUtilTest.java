@@ -1,12 +1,10 @@
 package com.app.util;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
+import java.util.HashMap;
+
 public class HttpClientUtilTest {
-
     @Test
     public void get() {
         HttpClientUtil.get();
@@ -14,5 +12,8 @@ public class HttpClientUtilTest {
 
     @Test
     public void post() {
+        HashMap<String, String> params = new HashMap<>();
+        String url = "https://www.baidu.com";
+        HttpClientUtil.post(params,url);
     }
 }
