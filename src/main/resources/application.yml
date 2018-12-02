@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: httpclienttest
+#日志
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    dao: debug
+    org:
+      mybatis: debug
