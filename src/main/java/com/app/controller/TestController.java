@@ -3,6 +3,7 @@ package com.app.controller;
 import com.app.entity.Test;
 import com.app.service.TestService;
 import com.app.service.ThreadRecordService;
+import com.app.util.PoolTest;
 import com.app.util.ThreadPoolHttpClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,4 +24,11 @@ public class TestController {
         threadRecordService.record();
         return "test";
     }
+    @RequestMapping("pooltest")
+    public Object pooltest(){
+        PoolTest poolTest = new PoolTest();
+        poolTest.test();
+        return "pooltest";
+    }
+
 }

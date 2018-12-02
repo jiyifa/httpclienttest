@@ -53,7 +53,7 @@ public class PoolTest {
         httpRequestBase.setConfig(requestConfig);
     }
 
-    public static void main(String[] args) {
+    public void test() {
         ConnectionSocketFactory plainsf = PlainConnectionSocketFactory.getSocketFactory();
         LayeredConnectionSocketFactory sslsf = SSLConnectionSocketFactory.getSocketFactory();
         Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
@@ -147,11 +147,9 @@ public class PoolTest {
             for(int i = 0; i< pagecount;i++){
                 HttpGet httpget = new HttpGet(urisToGet[i]);
                 config(httpget);
-
                 //启动线程抓取
                 executors.execute(new GetRunnable(httpClient,httpget,countDownLatch));
             }
-
             countDownLatch.await();
             executors.shutdown();
         } catch (InterruptedException e) {
@@ -159,7 +157,6 @@ public class PoolTest {
         } finally {
             System.out.println("线程" + Thread.currentThread().getName() + "," + System.currentTimeMillis() + ", 所有线程已完成，开始进入下一步！");
         }
-
         long end = System.currentTimeMillis();
         System.out.println("consume -> " + (end - start));
     }
@@ -172,7 +169,6 @@ public class PoolTest {
         public GetRunnable(CloseableHttpClient httpClient, HttpGet httpget, CountDownLatch countDownLatch){
             this.httpClient = httpClient;
             this.httpget = httpget;
-
             this.countDownLatch = countDownLatch;
         }
 
@@ -182,13 +178,12 @@ public class PoolTest {
             try {
                 response = httpClient.execute(httpget, HttpClientContext.create());
                 HttpEntity entity = response.getEntity();
-                System.out.println(EntityUtils.toString(entity, "utf-8")) ;
+                //System.out.println(EntityUtils.toString(entity, "utf-8")) ;
                 EntityUtils.consume(entity);
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 countDownLatch.countDown();
-
                 try {
                     if(response != null)
                         response.close();

@@ -17,3 +17,5 @@ logging:
     dao: debug
     org:
       mybatis: debug
+    org.apache.http.wire: debug
+    org.apache.http.headers: debug
