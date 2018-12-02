@@ -2,6 +2,8 @@ package com.app.controller;
 
 import com.app.entity.Test;
 import com.app.service.TestService;
+import com.app.service.ThreadRecordService;
+import com.app.util.ThreadPoolHttpClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,13 +16,11 @@ import java.util.Date;
 public class TestController {
     @Autowired
     private TestService testService;
+    @Autowired
+    private ThreadRecordService threadRecordService;
     @RequestMapping("test")
     public Object test(){
-        Test test = new Test();
-        test.setName("name1");
-        test.setRecordTime(new Date());
-        this.testService.add(test);
-        String info = "{\"id\":1,\"info\":\"hello world!\"}";
-        return info;
+        threadRecordService.record();
+        return "test";
     }
 }

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.ThreadRecordMapper">
+  <resultMap id="BaseResultMap" type="com.app.entity.ThreadRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="thread_id" jdbcType="VARCHAR" property="threadId" />
+    <result column="thread_name" jdbcType="VARCHAR" property="threadName" />
+    <result column="log" jdbcType="VARCHAR" property="log" />
+    <result column="record_time" jdbcType="TIMESTAMP" property="recordTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, thread_id, thread_name, log, record_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from thread_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from thread_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.app.entity.ThreadRecord">
+    insert into thread_record (id, thread_id, thread_name, 
+      log, record_time)
+    values (#{id,jdbcType=INTEGER}, #{threadId,jdbcType=VARCHAR}, #{threadName,jdbcType=VARCHAR}, 
+      #{log,jdbcType=VARCHAR}, #{recordTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.app.entity.ThreadRecord">
+    insert into thread_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="threadId != null">
+        thread_id,
+      </if>
+      <if test="threadName != null">
+        thread_name,
+      </if>
+      <if test="log != null">
+        log,
+      </if>
+      <if test="recordTime != null">
+        record_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="threadId != null">
+        #{threadId,jdbcType=VARCHAR},
+      </if>
+      <if test="threadName != null">
+        #{threadName,jdbcType=VARCHAR},
+      </if>
+      <if test="log != null">
+        #{log,jdbcType=VARCHAR},
+      </if>
+      <if test="recordTime != null">
+        #{recordTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.app.entity.ThreadRecord">
+    update thread_record
+    <set>
+      <if test="threadId != null">
+        thread_id = #{threadId,jdbcType=VARCHAR},
+      </if>
+      <if test="threadName != null">
+        thread_name = #{threadName,jdbcType=VARCHAR},
+      </if>
+      <if test="log != null">
+        log = #{log,jdbcType=VARCHAR},
+      </if>
+      <if test="recordTime != null">
+        record_time = #{recordTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.app.entity.ThreadRecord">
+    update thread_record
+    set thread_id = #{threadId,jdbcType=VARCHAR},
+      thread_name = #{threadName,jdbcType=VARCHAR},
+      log = #{log,jdbcType=VARCHAR},
+      record_time = #{recordTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

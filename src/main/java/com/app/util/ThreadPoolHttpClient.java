@@ -1,5 +1,7 @@
 package com.app.util;
 
+import com.app.entity.ThreadRecord;
+import com.app.mapper.ThreadRecordMapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -16,19 +18,27 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ThreadPoolHttpClient {
+    private ThreadRecordMapper threadRecordMapper;
     // 线程池
     private ExecutorService exe = null;
     // 线程池的容量
     private static final int POOL_SIZE = 20;
     private HttpClient client = null;
     String[] urls=null;
-    public ThreadPoolHttpClient(String[] urls){
-        this.urls=urls;
+
+    public ThreadPoolHttpClient(ThreadRecordMapper threadRecordMapper, String[] urls) {
+        this.threadRecordMapper = threadRecordMapper;
+        this.urls = urls;
     }
 
     public void test() throws Exception {
@@ -55,53 +65,13 @@ public class ThreadPoolHttpClient {
         final String[] urisToGet = urls;
         /* 有多少url创建多少线程，url多时机子撑不住
         使用线程池*/
+        System.out.println(threadRecordMapper);
         for (int i = 0; i < urisToGet.length; i++) {
             final int j=i;
             System.out.println(j);
             HttpGet httpget = new HttpGet(urisToGet[i]);
-            exe.execute( new GetThread(httpClient, httpget));
+            exe.execute( new GetThread(httpClient, httpget,threadRecordMapper));
         }
         System.out.println("Done");
-    }
-    static class GetThread extends Thread{
-
-        private final HttpClient httpClient;
-        private final HttpContext context;
-        private final HttpGet httpget;
-
-        public GetThread(HttpClient httpClient, HttpGet httpget) {
-            this.httpClient = httpClient;
-            this.context = new BasicHttpContext();
-            this.httpget = httpget;
-        }
-        @Override
-        public void run(){
-            this.setName("threadsPoolClient");
-            try {
-                Thread.sleep(5000);
-                System.out.println("run"+Thread.currentThread().getName());
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            get();
-        }
-
-        public void get() {
-            System.out.println("this is get methord");
-            try {
-                HttpResponse response = this.httpClient.execute(this.httpget, this.context);
-                HttpEntity entity = response.getEntity();
-                if (entity != null) {
-                    System.out.println(this.httpget.getURI()+": status"+response.getStatusLine().toString());
-                }
-                // ensure the connection gets released to the manager
-                EntityUtils.consume(entity);
-            } catch (Exception ex) {
-                this.httpget.abort();
-            }finally{
-                httpget.releaseConnection();
-            }
-        }
     }
 }
