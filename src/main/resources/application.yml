@@ -1,6 +1,15 @@
 spring:
   application:
     name: httpclienttest
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: "jdbc:mysql://localhost:3306/test"
+    username: root
+    password: root123
+mybatis:
+  type-aliases-package: com.app.entity #实体类的包
+  mapper-locations: classpath:mapping/*.xml #Mapper的xml文件
 #日志
 logging:
   config: classpath:logback-spring.xml

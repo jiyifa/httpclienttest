@@ -54,21 +54,6 @@ public class ThreadPoolHttpClient {
         // URIs to perform GETs on
         final String[] urisToGet = urls;
         /* 有多少url创建多少线程，url多时机子撑不住
-        // create a thread for each URI
-        GetThread[] threads = new GetThread[urisToGet.length];
-        for (int i = 0; i < threads.length; i++) {
-            HttpGet httpget = new HttpGet(urisToGet[i]);
-            threads[i] = new GetThread(httpClient, httpget);
-        }
-        // start the threads
-        for (int j = 0; j < threads.length; j++) {
-            threads[j].start();
-        }
-
-        // join the threads，等待所有请求完成
-        for (int j = 0; j < threads.length; j++) {
-            threads[j].join();
-        }
         使用线程池*/
         for (int i = 0; i < urisToGet.length; i++) {
             final int j=i;
@@ -76,37 +61,6 @@ public class ThreadPoolHttpClient {
             HttpGet httpget = new HttpGet(urisToGet[i]);
             exe.execute( new GetThread(httpClient, httpget));
         }
-
-
-        //创建线程池，每次调用POOL_SIZE
-        /*
-        for (int i = 0; i < urisToGet.length; i++) {
-            final int j=i;
-            System.out.println(j);
-            exe.execute(new Thread() {
-                @Override
-                public void run() {
-                    this.setName("threadsPoolClient"+j);
-
-                        try {
-                            this.sleep(100);
-                            System.out.println(j);
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-
-                        HttpGet httpget = new HttpGet(urisToGet[j]);
-                        new GetThread(httpClient, httpget).get();
-                    }
-
-
-
-            });
-        }
-
-        */
-        //exe.shutdown();
         System.out.println("Done");
     }
     static class GetThread extends Thread{
@@ -125,6 +79,7 @@ public class ThreadPoolHttpClient {
             this.setName("threadsPoolClient");
             try {
                 Thread.sleep(5000);
+                System.out.println("run"+Thread.currentThread().getName());
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -133,6 +88,7 @@ public class ThreadPoolHttpClient {
         }
 
         public void get() {
+            System.out.println("this is get methord");
             try {
                 HttpResponse response = this.httpClient.execute(this.httpget, this.context);
                 HttpEntity entity = response.getEntity();
